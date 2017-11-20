@@ -2,7 +2,6 @@ language: go
 go:
   - 1.9.2
   - release
-  - tip
 
 script:
   - go test -v -race ./...
