@@ -1,6 +1,9 @@
 package mappy
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestMarshal(t *testing.T) {
 	testCases := []struct {
@@ -69,5 +72,64 @@ func TestMarshal(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func ExampleMarshal() {
+	type Person struct {
+		FirstName string `map:"first_name"`
+		LastName  string `map:"last_name"`
+	}
+
+	p := Person{FirstName: "Tim", LastName: "Duncan"}
+
+	pMap, _ := Marshal(p)
+
+	fmt.Println(pMap["first_name"])
+	fmt.Println(pMap["last_name"])
+
+	// Output:
+	// Tim
+	// Duncan
+}
+
+func BenchmarkMarshal(b *testing.B) {
+	type Person struct {
+		FirstName string `map:"first_name"`
+		LastName  string `map:"last_name"`
+	}
+
+	p := Person{FirstName: "Tim", LastName: "Duncan"}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		pMap, _ := Marshal(p)
+		if len(pMap) != 2 {
+			b.Fail()
+		}
+	}
+}
+
+func BenchmarkStructToMap(b *testing.B) {
+	type Person struct {
+		FirstName string
+		LastName  string
+	}
+	const (
+		keyFirstName = "first_name"
+		keyLastName  = "last_name"
+	)
+
+	p := Person{FirstName: "Tim", LastName: "Duncan"}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		pMap := map[string]string{
+			keyFirstName: p.FirstName,
+			keyLastName:  p.LastName,
+		}
+		if len(pMap) != 2 {
+			b.Fail()
+		}
 	}
 }

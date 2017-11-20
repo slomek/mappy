@@ -1,6 +1,7 @@
 package mappy
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -62,5 +63,75 @@ func TestUnmarshalTaggedFieldsOnly(t *testing.T) {
 
 	if !reflect.DeepEqual(s, out) {
 		t.Errorf("Expected true, got false")
+	}
+}
+
+func ExampleUnmarshal() {
+	type Person struct {
+		FirstName string `map:"first_name"`
+		LastName  string `map:"last_name"`
+	}
+
+	pMap := map[string]string{
+		"first_name": "Shaquille",
+		"last_name":  "O'Neal",
+	}
+
+	var p Person
+	Unmarshal(pMap, &p)
+
+	fmt.Println(p.FirstName)
+	fmt.Println(p.LastName)
+
+	// Output:
+	// Shaquille
+	// O'Neal
+}
+
+func BenchmarkUnarshal(b *testing.B) {
+	type Person struct {
+		FirstName string `map:"first_name"`
+		LastName  string `map:"last_name"`
+	}
+
+	pMap := map[string]string{
+		"first_name": "Shaquille",
+		"last_name":  "O'Neal",
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		var p Person
+		Unmarshal(pMap, &p)
+		if p.FirstName == "" {
+			b.Fail()
+		}
+	}
+}
+
+func BenchmarkMapToStruct(b *testing.B) {
+	type Person struct {
+		FirstName string `map:"first_name"`
+		LastName  string `map:"last_name"`
+	}
+	const (
+		keyFirstName = "first_name"
+		keyLastName  = "last_name"
+	)
+
+	pMap := map[string]string{
+		keyFirstName: "Shaquille",
+		keyLastName:  "O'Neal",
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		p := Person{
+			FirstName: pMap[keyFirstName],
+			LastName:  pMap[keyLastName],
+		}
+		if p.FirstName == "" {
+			b.Fail()
+		}
 	}
 }
