@@ -2,6 +2,7 @@ package mappy
 
 import "reflect"
 
+// Marshal transforms a custom struct into string->string map.
 func Marshal(data interface{}) (map[string]string, error) {
 	m := map[string]string{}
 	rv := reflect.ValueOf(data)

@@ -1,6 +1,8 @@
 # mappy
 
 [![Build Status](https://travis-ci.org/slomek/mappy.svg?branch=master)](https://travis-ci.org/slomek/mappy)
+[![Documentation](https://godoc.org/github.com/slomek/mappy?status.svg)](https://godoc.org/github.com/slomek/mappy?status.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/slomek/mappy)](https://goreportcard.com/report/github.com/slomek/mappy)
 
 The purpose of this tiny library is to easily parse `string`->`string` maps to typed structures in Go. I've faced a real problem where I needed to define a list of keys that may appear in the map, then have each key associated with `struct`'s field and they had to be manually transformed. `mappy` tackles the problem using _struct tags_, where each field is represented with the key that is to be found in the map.
 
