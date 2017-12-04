@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/pkg/errors"
 )
 
 func TestUnmarshal(t *testing.T) {
@@ -64,6 +66,26 @@ func TestUnmarshalTaggedFieldsOnly(t *testing.T) {
 	if !reflect.DeepEqual(s, out) {
 		t.Errorf("Expected true, got false")
 	}
+}
+
+func TestUnmarshalError(t *testing.T) {
+	type Person struct {
+		Name string `map:"name"`
+		Age  int    `map:"age"`
+	}
+	in := map[string]string{
+		"name": "slomek",
+		"age":  "99",
+	}
+
+	var s Person
+	if err := Unmarshal(in, &s); err != nil {
+		if errors.Cause(err) != ErrMapUnmarshal {
+			t.Fatalf("Expected error returned to be %v, got: %v", ErrMapUnmarshal, err)
+		}
+		return
+	}
+	t.Fatalf("Expected error, not returned though")
 }
 
 func ExampleUnmarshal() {
