@@ -18,6 +18,11 @@ func Unmarshal(m map[string]string, data interface{}) (err error) {
 		}
 	}()
 
+	// Exit if the map is empty.
+	if len(m) == 0 {
+		return nil
+	}
+
 	rv := reflect.ValueOf(data)
 	el := rv.Elem()
 	elT := el.Type()

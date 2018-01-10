@@ -88,6 +88,34 @@ func TestUnmarshalError(t *testing.T) {
 	t.Fatalf("Expected error, not returned though")
 }
 
+func TestUnmarshalEmptyMap(t *testing.T) {
+	type Person struct {
+		Name string `map:"name"`
+		Age  int    `map:"age"`
+	}
+
+	testCases := []struct {
+		desc string
+		in   map[string]string
+	}{
+		{
+			desc: "nil map",
+			in:   nil,
+		}, {
+			desc: "nil map",
+			in:   map[string]string{},
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			var s Person
+			if err := Unmarshal(tC.in, &s); err != nil {
+				t.Fatalf("Failed to unmarshal struct to map: %v", err)
+			}
+		})
+	}
+}
+
 func ExampleUnmarshal() {
 	type Person struct {
 		FirstName string `map:"first_name"`
