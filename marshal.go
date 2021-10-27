@@ -1,20 +1,20 @@
 package mappy
 
 import (
-	stderr "errors"
+	"errors"
+	"fmt"
 	"reflect"
 
-	"github.com/pkg/errors"
 )
 
 // ErrMapMarshal is returned when it is not possible to marshal struct into a map.
-var ErrMapMarshal = stderr.New("failed to marshal struct into map")
+var ErrMapMarshal = errors.New("failed to marshal struct into map")
 
 // Marshal transforms a custom struct into string->string map.
 func Marshal(data interface{}) (m map[string]string, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = errors.Wrapf(ErrMapMarshal, "%v", r)
+			err = fmt.Errorf("%v: %w", r, ErrMapMarshal)
 		}
 	}()
 
