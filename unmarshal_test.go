@@ -1,11 +1,10 @@
 package mappy
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"testing"
-
-	"github.com/pkg/errors"
 )
 
 func TestUnmarshal(t *testing.T) {
@@ -80,7 +79,7 @@ func TestUnmarshalError(t *testing.T) {
 
 	var s Person
 	if err := Unmarshal(in, &s); err != nil {
-		if errors.Cause(err) != ErrMapUnmarshal {
+		if errors.Unwrap(err) != ErrMapUnmarshal {
 			t.Fatalf("Expected error returned to be %v, got: %v", ErrMapUnmarshal, err)
 		}
 		return
